@@ -12,6 +12,7 @@
 		D95ADC671B59C5B200C71221 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D95ADC661B59C5B200C71221 /* Images.xcassets */; };
 		D95ADC6A1B59C5B200C71221 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D95ADC681B59C5B200C71221 /* Main.storyboard */; };
 		D95ADC761B59C5B200C71221 /* MOCoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95ADC751B59C5B200C71221 /* MOCoreTests.swift */; };
+		D95ADCC91B59C9DB00C71221 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = D95ADCC81B59C9DB00C71221 /* GCDAsyncSocket.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +35,9 @@
 		D95ADC6F1B59C5B200C71221 /* MOCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MOCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D95ADC741B59C5B200C71221 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D95ADC751B59C5B200C71221 /* MOCoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MOCoreTests.swift; sourceTree = "<group>"; };
+		D95ADCC61B59C9DA00C71221 /* MOCore-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MOCore-Bridging-Header.h"; sourceTree = "<group>"; };
+		D95ADCC71B59C9DB00C71221 /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncSocket.h; sourceTree = "<group>"; };
+		D95ADCC81B59C9DB00C71221 /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,9 +81,12 @@
 			children = (
 				D95ADC621B59C5B200C71221 /* AppDelegate.swift */,
 				D95ADC641B59C5B200C71221 /* ViewController.swift */,
+				D95ADCC71B59C9DB00C71221 /* GCDAsyncSocket.h */,
+				D95ADCC81B59C9DB00C71221 /* GCDAsyncSocket.m */,
 				D95ADC661B59C5B200C71221 /* Images.xcassets */,
 				D95ADC681B59C5B200C71221 /* Main.storyboard */,
 				D95ADC601B59C5B200C71221 /* Supporting Files */,
+				D95ADCC61B59C9DA00C71221 /* MOCore-Bridging-Header.h */,
 			);
 			path = MOCore;
 			sourceTree = "<group>";
@@ -208,6 +215,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D95ADCC91B59C9DB00C71221 /* GCDAsyncSocket.m in Sources */,
 				D95ADC651B59C5B200C71221 /* ViewController.swift in Sources */,
 				D95ADC631B59C5B200C71221 /* AppDelegate.swift in Sources */,
 			);
@@ -327,10 +335,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = MOCore/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "MOCore/MOCore-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -338,10 +349,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = MOCore/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "MOCore/MOCore-Bridging-Header.h";
 			};
 			name = Release;
 		};
