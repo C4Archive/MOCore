@@ -130,8 +130,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSNetServiceDelegate, GCDAsy
     }
 
     func socket(sock: GCDAsyncSocket!, didReadData data: NSData!, withTag tag: Int) {
-        let range = data.rangeOfData(GCDAsyncSocket.CRLFData(), options: .Backwards, range: NSMakeRange(0, data.length))
-        let modData = data.subdataWithRange(NSMakeRange(0, range.location))
+        let modData = data.subdataWithRange(NSMakeRange(0, data.length-2))
 
         var otherSockets = [GCDAsyncSocket]()
 
