@@ -19,6 +19,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSNetServiceDelegate, GCDAsy
     //A list of all the sockets that have been connected
     var connectedSockets = [GCDAsyncSocket]()
 
+    var timeSocket : GCDAsyncSocket?
+    var timeSockets = [GCDAsyncSocket]()
+    var timeService : NSNetService?
+    var timer : NSTimer?
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         //creates the primary socket, on the main queue
@@ -39,9 +43,23 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSNetServiceDelegate, GCDAsy
                 //publish the service
                 netService?.publish()
             }
+
+            var timeError : NSError?
+            timeSocket = GCDAsyncSocket(delegate: self, delegateQueue: dispatch_get_main_queue())
+
+            if timeSocket?.acceptOnPort(0, error: &timeError) == true {
+                if let port : UInt16 = timeSocket?.localPort {
+                    timeService = NSNetService(domain: "local.", type: "_m-o-time._tcp.", name: "m-o-time-service", port:Int32(port))
+                    timeService?.delegate = self
+                    timeService?.publish()
+                }
+            } else {
+                println("Error in acceptOnPort:error: -> \(timeError) : timeSocket")
+            }
+
         } else {
             //couldn't set up the socket to accept connections
-            println("Error in acceptOnPort:error: -> \(error)")
+            println("Error in acceptOnPort:error: -> \(error) : asyncSocket")
         }
 
         //registers the app delegate to observer "down" messages from any object that sends one
@@ -49,12 +67,20 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSNetServiceDelegate, GCDAsy
 
         //registers the app delegate to observer "dragged" messages from any object that sends one
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("handle:"), name: "dragged", object: nil)
+
+        timer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "broadcastTime", userInfo: nil, repeats: true)
     }
 
     func socket(sock: GCDAsyncSocket!, didAcceptNewSocket newSocket: GCDAsyncSocket!) {
         println("\(__FUNCTION__) from: \(newSocket.connectedHost):\(newSocket.connectedPort)")
-        connectedSockets.append(newSocket)
-        writeTo(newSocket, message: "handshake-from-central")
+        if sock == timeSocket {
+            timeSockets.append(newSocket)
+            writeTo(newSocket, message: "handshake-from-central (time)")
+        }   else {
+            connectedSockets.append(newSocket)
+            writeTo(newSocket, message: "handshake-from-central (default)")
+
+        }
     }
 
     func writeTo(sock: GCDAsyncSocket, message: String) {
@@ -132,6 +158,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSNetServiceDelegate, GCDAsy
         }
 
         sock.readDataWithTimeout(-1, tag: 0)
+    }
+
+    func broadcastTime() {
+        if timeSockets.count > 0 {
+            let message = "\(CFAbsoluteTimeGetCurrent())"
+            writeToSockets(timeSockets, message: message)
+        }
     }
 
     func handle(notification: NSNotification) {
